@@ -1,3 +1,3 @@
 output "addresses" {
-    value = module.loadbalancing.addresses
+  value = module.loadbalancing.addresses
 }

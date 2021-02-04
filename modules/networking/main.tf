@@ -13,7 +13,7 @@ resource "azurerm_subnet" "vm_subnet" {
   name                 = "${var.namespace}-public0"
   resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.virtual_network.name
-  address_prefixes       = ["172.16.0.0/24"]
+  address_prefixes     = ["172.16.0.0/24"]
   provisioner "local-exec" {
     when    = destroy
     command = "sleep 30"

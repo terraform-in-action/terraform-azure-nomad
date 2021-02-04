@@ -24,7 +24,7 @@ module "loadbalancing" {
 module "consul_servers" {
   source = "./modules/cluster"
 
-  location            = var.location
+  location       = var.location
   instance_count = var.consul.servers_count
   instance_size  = var.consul.server_instance_size
   datacenter     = var.datacenter

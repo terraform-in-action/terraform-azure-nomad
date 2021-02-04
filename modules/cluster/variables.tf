@@ -16,13 +16,13 @@ variable "datacenter" {
 
 variable "join_wan" {
   default = []
-  type = list(string)
+  type    = list(string)
 }
 
 variable "admin" {
   type = object({
-    username = string
-    password = string
+    username                        = string
+    password                        = string
     disable_password_authentication = bool
   })
 }

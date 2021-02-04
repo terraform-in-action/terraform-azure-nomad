@@ -2,18 +2,18 @@ data "azurerm_client_config" "current" {}
 
 locals {
   consul_config = var.consul.mode != "disabled" ? templatefile("${path.module}/templates/consul_${var.consul.mode}.json", {
-    instance_count = var.instance_count,
-    namespace      = var.namespace,
-    datacenter     = var.datacenter,
-    join_wan       = join(",",[for s in var.join_wan: join("",["\"",s,"\""])]),
-    resource_group = var.resource_group_name,
+    instance_count  = var.instance_count,
+    namespace       = var.namespace,
+    datacenter      = var.datacenter,
+    join_wan        = join(",", [for s in var.join_wan : join("", ["\"", s, "\""])]),
+    resource_group  = var.resource_group_name,
     subscription_id = data.azurerm_subscription.primary.subscription_id
     vm_scale_sets = {
       consul_servers = "${var.namespace}-Ndisabled-Cserver"
     }
     advertise_addr = var.associate_public_ips ? "$PUBLIC_IP" : "$PRIVATE_IP"
-    tag_name  = "name"
-    tag_value = "${var.namespace}-Ndisabled-Cserver"
+    tag_name       = "name"
+    tag_value      = "${var.namespace}-Ndisabled-Cserver"
   }) : ""
   nomad_config = var.nomad.mode != "disabled" ? templatefile("${path.module}/templates/nomad_${var.nomad.mode}.hcl", {
     instance_count = var.instance_count
