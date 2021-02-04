@@ -2,13 +2,13 @@ module "resourcegroup" {
   source = "./modules/resourcegroup"
 
   namespace = var.namespace
-  location  = var.azure.location
+  location  = var.location
 }
 
 module "networking" {
   source = "./modules/networking"
 
-  location            = var.azure.location
+  location            = var.location
   namespace           = module.resourcegroup.namespace
   resource_group_name = module.resourcegroup.resource_group_name
 }
@@ -16,7 +16,7 @@ module "networking" {
 module "loadbalancing" {
   source = "./modules/loadbalancing"
 
-  location            = var.azure.location
+  location            = var.location
   namespace           = module.resourcegroup.namespace
   resource_group_name = module.resourcegroup.resource_group_name
 }
@@ -24,10 +24,9 @@ module "loadbalancing" {
 module "consul_servers" {
   source = "./modules/cluster"
 
-  azure          = var.azure
+  location            = var.location
   instance_count = var.consul.servers_count
   instance_size  = var.consul.server_instance_size
-  location       = var.azure.location
   datacenter     = var.datacenter
   join_wan       = var.join_wan
   admin          = var.admin
@@ -48,10 +47,9 @@ module "consul_servers" {
 module "nomad_servers" {
   source = "./modules/cluster"
 
-  azure          = var.azure
   instance_count = var.nomad.servers_count
   instance_size  = var.nomad.server_instance_size
-  location       = var.azure.location
+  location       = var.location
   datacenter     = var.datacenter
   admin          = var.admin
 
@@ -75,10 +73,9 @@ module "nomad_servers" {
 module "nomad_clients" {
   source = "./modules/cluster"
 
-  azure          = var.azure
   instance_count = var.nomad.clients_count
   instance_size  = var.nomad.client_instance_size
-  location       = var.azure.location
+  location       = var.location
   datacenter     = var.datacenter
   admin          = var.admin
 

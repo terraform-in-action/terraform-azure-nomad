@@ -109,10 +109,13 @@ EOF
 # Install software
 installDependencies
 
-# Grab public and private Ips
-echo "Grabbing IPs..."
+# this populates the config file
 PRIVATE_IP=$(lookupPathInMetadata ".network.interface[0].ipv4.ipAddress[0].privateIpAddress")
-PUBLIC_IP=$(dig +short myip.opendns.com @resolver1.opendns.com)
+
+# Consul Server also needs public IP
+if [[  ${consul_mode} == "server" ]]; then
+  PUBLIC_IP=$(dig +short myip.opendns.com @resolver1.opendns.com)
+fi
 
 if [[  ${consul_mode} != "disabled" ]]; then
   installConsul ${consul_version}
@@ -141,6 +144,4 @@ fi
 if [[  ${nomad_mode} != "disabled" ]]; then
   sudo systemctl enable nomad.service
   sudo systemctl start nomad.service
-  #sleep 300
-  #sudo systemctl restart nomad.service
 fi

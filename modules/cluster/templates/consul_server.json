@@ -9,11 +9,13 @@
   "disable_update_check": true,
   "bootstrap_expect": ${instance_count},
   "leave_on_terminate": true,
-  "retry_join": [ "provider=azure resource_group=${resource_group} vm_scale_set=${vm_scale_sets.consul_servers} tenant_id=${azure.tenant_id} client_id=${azure.client_id} subscription_id=${azure.subscription_id} secret_access_key=${azure.client_secret}" ],
+  "retry_join": [ "provider=azure resource_group=${resource_group} vm_scale_set=${vm_scale_sets.consul_servers} subscription_id=${subscription_id}" ],
   "retry_join_wan" : [ ${join_wan}],
   "server": true,
   "raft_protocol": 3,
-  "ui": true,
+  "ui_config": {
+    "enabled": true
+  },
   "autopilot": {
     "cleanup_dead_servers": true,
     "last_contact_threshold": "200ms",

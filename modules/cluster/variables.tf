@@ -1,12 +1,3 @@
-variable "azure" {
-  type = object({
-    subscription_id = string
-    client_id       = string
-    client_secret   = string
-    tenant_id       = string
-  })
-}
-
 variable "instance_count" {
   type = number
 }

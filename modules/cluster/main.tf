@@ -1,12 +1,13 @@
+data "azurerm_client_config" "current" {}
 
 locals {
   consul_config = var.consul.mode != "disabled" ? templatefile("${path.module}/templates/consul_${var.consul.mode}.json", {
     instance_count = var.instance_count,
     namespace      = var.namespace,
-    azure          = var.azure,
     datacenter     = var.datacenter,
     join_wan       = join(",",[for s in var.join_wan: join("",["\"",s,"\""])]),
     resource_group = var.resource_group_name,
+    subscription_id = data.azurerm_subscription.primary.subscription_id
     vm_scale_sets = {
       consul_servers = "${var.namespace}-Ndisabled-Cserver"
     }
@@ -27,7 +28,6 @@ locals {
     nomad_version  = var.nomad.version,
     nomad_config   = local.nomad_config,
     nomad_mode     = var.nomad.mode,
-    azure          = var.azure,
   })
   namespace = "${var.namespace}-N${var.nomad.mode}-C${var.consul.mode}"
 }
@@ -63,12 +63,19 @@ resource "azurerm_virtual_machine_scale_set" "scale_set" {
       subnet_id                              = var.vpc.subnets[0].id
       load_balancer_backend_address_pool_ids = var.lb_backend_address_pool_ids
 
-      public_ip_address_configuration {
-        name              = "PublicIPConfiguration"
-        idle_timeout      = 5
-        domain_name_label = lower(local.namespace)
+      dynamic "public_ip_address_configuration" {
+        for_each = var.associate_public_ips ? [1] : []
+        content {
+          name              = "PublicIPConfiguration"
+          idle_timeout      = 5
+          domain_name_label = lower(local.namespace)
+        }
       }
     }
+  }
+
+  identity {
+    type = "SystemAssigned"
   }
 
   os_profile {
@@ -104,6 +111,14 @@ resource "azurerm_virtual_machine_scale_set" "scale_set" {
     enabled     = true
     storage_uri = azurerm_storage_account.storage_account.primary_blob_endpoint
   }
+}
+
+data "azurerm_subscription" "primary" {}
+
+resource "azurerm_role_assignment" "role_assignment" {
+  scope                = data.azurerm_subscription.primary.id
+  role_definition_name = "Virtual Machine Contributor"
+  principal_id         = azurerm_virtual_machine_scale_set.scale_set.identity[0].principal_id
 }
 
 resource "azurerm_monitor_autoscale_setting" "autoscale_setting" {

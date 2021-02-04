@@ -18,14 +18,8 @@ variable "associate_public_ips" {
   type    = bool
 }
 
-variable "azure" {
-  type = object({
-    subscription_id = string
-    client_id       = string
-    client_secret   = string
-    tenant_id       = string
-    location        = string
-  })
+variable "location" {
+  type = string
 }
 
 variable "admin" {
