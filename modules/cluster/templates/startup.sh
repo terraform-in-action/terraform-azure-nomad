@@ -113,9 +113,9 @@ installDependencies
 PRIVATE_IP=$(lookupPathInMetadata ".network.interface[0].ipv4.ipAddress[0].privateIpAddress")
 
 # Consul Server also needs public IP
-if [[  ${consul_mode} == "server" ]]; then
-  PUBLIC_IP=$(dig +short myip.opendns.com @resolver1.opendns.com)
-fi
+#if [[  ${consul_mode} == "server" ]]; then
+PUBLIC_IP=$(dig +short myip.opendns.com @resolver1.opendns.com)
+#fi
 
 if [[  ${consul_mode} != "disabled" ]]; then
   installConsul ${consul_version}
