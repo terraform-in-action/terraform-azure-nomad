@@ -21,7 +21,6 @@ resource "azurerm_lb" "consul_lb_external" {
 }
 
 resource "azurerm_lb_backend_address_pool" "consul_address_pool" {
-  resource_group_name = var.resource_group_name
   loadbalancer_id     = azurerm_lb.consul_lb_external.id
   name                = "${var.namespace}-consul-pool"
 }
@@ -70,7 +69,6 @@ resource "azurerm_lb" "nomad_lb_external" {
 }
 
 resource "azurerm_lb_backend_address_pool" "nomad_address_pool" {
-  resource_group_name = var.resource_group_name
   loadbalancer_id     = azurerm_lb.nomad_lb_external.id
   name                = "${var.namespace}-nomad-pool"
 }
@@ -119,7 +117,6 @@ resource "azurerm_lb" "fabio_lb_external" {
 }
 
 resource "azurerm_lb_backend_address_pool" "fabio_address_pool" {
-  resource_group_name = var.resource_group_name
   loadbalancer_id     = azurerm_lb.fabio_lb_external.id
   name                = "${var.namespace}-fabio-pool"
 }
