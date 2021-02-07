@@ -9,4 +9,9 @@ advertise {
 }
 client {
   enabled = true
+
+  host_volume "fabio" {
+    path      = "/etc/fabio/fabio.properties"
+    read_only = false
+  }
 }
