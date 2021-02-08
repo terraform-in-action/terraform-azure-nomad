@@ -88,7 +88,7 @@ module "nomad_clients" {
     mode    = "client"
   }
 
-  associate_public_ips        = true
+  associate_public_ips        = false
   namespace                   = module.resourcegroup.namespace
   vpc                         = module.networking.vpc
   security_group_id           = module.networking.sg.nomad_client
